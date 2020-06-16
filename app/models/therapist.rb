@@ -11,7 +11,8 @@ class Therapist < ActiveRecord::Base
 
       { "#{text}" => a.id } 
     end
-    array << { "Create an Appointment" => false }
+    array << { "Create an Appointment" => "Create" }
+    array << { "Quit" => "Quit" }
   end
   
   ##  CLASS METHODS  ##

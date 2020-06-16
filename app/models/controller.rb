@@ -1,6 +1,6 @@
 class Controller
 
-  attr_accessor :therapist, :prompt
+  attr_accessor :therapist, :prompt, :appointment
 
   def initialize
     @prompt = TTY::Prompt.new
@@ -20,21 +20,25 @@ class Controller
   end
   
   def dashboard
+    self.appointment = nil
     greetings
     self.therapist.reload
     selection = prompt.select("Hello, #{self.therapist.name}.\nSelect an Appointment to View/Edit, or Create an Appointment.",
     self.therapist.list_view)
-    unless selection
-      create_appointment ##
+    case selection
+    when "Create"
+      create_appointment
+    when "Quit"
+      quit
     else
-      view_appoointment(selection)
+      self.appointment = Appointment.find(selection)
+      self.view_appointment
     end
   end
     
-  def view_appoointment(id)
+  def view_appointment
     greetings
-    appointment = Appointment.find(id)
-    appointment_display = appointment.display
+    appointment_display = self.appointment.display
     prompt.select(appointment_display) do |menu|
       menu.choice "Edit this Appointment", ->{ self.edit_appointment } ##
       menu.choice "Delete this Appointment", -> { self.delete_appointment } ##
@@ -51,7 +55,8 @@ class Controller
       patient_name = prompt.ask("Please enter your patient's name")
       patient = Patient.find_by(name: patient_name)
     end
-    scheduled_time = prompt.ask("When would like to schedule this appointment for?", convert: :datetime)
+    scheduled_time = Time.now + rand(10.days)
+    prompt.ask("When would like to schedule this appointment for?")
     status = "Scheduled"
     therapist = self.therapist
     appointment = Appointment.create(
@@ -60,8 +65,47 @@ class Controller
       status: status,
       therapist:therapist
     )
-    view_appoointment(appointment.id)
+    self.appointment = appointment
+    view_appointment
   end
+  
+  def edit_appointment
+    hash = prompt.collect do
+      key(:scheduled_time).ask("Change Scheduled Time")
+      key(:patient).ask("Enter New Patient Name")
+      key(:status).ask("Enter New Status")
+      key(:note).ask("Enter a New Note")
+    end
+    
+    appointment.scheduled_time = Time.now + rand(10.days) if hash[:scheduled_time]
+    appointment.patient = Patient.find_by(name: hash[:patient]) if Patient.find_by(name: hash[:patient])
+    appointment.status = hash[:status] if hash[:status]
+    appointment.note = hash[:note] if hash[:note]
+
+    view_appointment
+    
+  end
+
+  def delete_appointment
+    sleep 1
+    delete = prompt.yes?("Are you suuuuuure you want to delete this appointment?")
+    if delete
+      appointment.destroy
+      puts "):  Appointment Deleted  :("
+      dashboard
+    else
+      view_appointment
+    end
+    
+  end
+  
+  def quit
+    system("clear")
+    sleep 0.5
+    puts "Bye bye!"
+    system("clear")
+  end
+  
   
   
 
