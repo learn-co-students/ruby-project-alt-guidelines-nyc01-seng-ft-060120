@@ -22,7 +22,7 @@ gyro = MenuItem.create(food_name: "Gyro", price: 9.50)
 gyro.restaurant = greek
 gyro.save
 
-bigmac = MenuItem.create(food_name: "Bic Mac", price: 3.99)
+bigmac = MenuItem.create(food_name: "Big Mac", price: 3.99)
 bigmac.restaurant = mcdonalds
 bigmac.save
 

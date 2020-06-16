@@ -8,9 +8,7 @@ customer = Customer.all.last
 cli.restaurant_list
 rest_input = gets.strip
 puts cli.read_menu(rest_input)
-puts ""
-puts "***"
-puts "Please select your item by typing the food name:"
-puts ""
+cli.test_space_select_item
 food_input = gets.strip.titleize
 cli.place_new_order(customer,food_input)
+cli.next_choice(customer)

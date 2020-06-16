@@ -21,6 +21,8 @@ class Customer < ActiveRecord::Base
         orders.last
     end
 
+    
+
     def update_last_order(menu_item)
         last_order = self.last_order
         last_order.menu_item = menu_item
@@ -30,6 +32,10 @@ class Customer < ActiveRecord::Base
 
     def cancel_last_order
         self.last_order.destroy
+    end
+
+    def change_username(new_un)
+        self.username = new_un
     end
 
 end
