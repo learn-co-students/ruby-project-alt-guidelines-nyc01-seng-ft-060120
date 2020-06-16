@@ -32,13 +32,23 @@ class CommandLineInterface
         puts selected_rest.return_menu_string
     end
 
-    def place_new_order(customer)
+    def food_selection_checker
         puts ""
         puts "***"
         puts "Please select your item by typing the food name:"
         puts ""
         food_input = gets.strip.titleize
-        food_selection = MenuItem.find_by(food_name: food_input)
+
+        if !!MenuItem.find_by(food_name: food_input)
+            MenuItem.find_by(food_name: food_input)
+        else
+            puts "You seem to have a typo. Try again"
+            food_selection_checker
+        end
+    end
+
+    def place_new_order(customer)
+        food_selection = food_selection_checker
         customer.place_order(food_selection)
         puts ""
         puts "You have selected #{food_selection.food_name}, your order has been created!"
@@ -98,12 +108,7 @@ class CommandLineInterface
         sleep 3
         self.restaurant_list
         self.read_menu
-        puts ""
-        puts "***"
-        puts "Please select the item you'd like to update your order to:"
-        puts ""
-        food_input = gets.strip.titleize
-        food_selection = MenuItem.find_by(food_name: food_input)
+        food_selection = food_selection_checker
         customer.update_last_order(food_selection)
         puts "Update Succesful!"
         self.view_last_order(customer)
@@ -142,5 +147,14 @@ class CommandLineInterface
         puts "Goodbye!"
         sleep 3
         system "clear"
+    end
+
+    def run
+        self.greet
+        customer = self.register
+        self.restaurant_list
+        self.read_menu
+        self.place_new_order(customer)
+        self.next_choice(customer)
     end
 end
