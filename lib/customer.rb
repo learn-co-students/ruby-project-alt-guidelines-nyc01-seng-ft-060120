@@ -21,8 +21,6 @@ class Customer < ActiveRecord::Base
         orders.last
     end
 
-    
-
     def update_last_order(menu_item)
         last_order = self.last_order
         last_order.menu_item = menu_item
