@@ -7,7 +7,21 @@ class CommandLineInterface
 
     def register(input)
         Customer.create(username: input)
-        puts "Thank you for registering, #{}"
+        puts "Thank you for registering, #{input}"
+    end
+
+    def restaurant_list
+        puts "Here is a list of all restaurants. Select a restaurant to view it's menu:"
+        allrestaurant = Restaurant.all.each_with_index do |rest, index|
+            puts "#{index + 1}. " + rest.name
+        end
+    end
+
+    def read_menu
+        puts 
+    end
+
+    def place_new_order
     end
 
     # def cancel_confirmation
