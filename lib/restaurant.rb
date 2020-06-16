@@ -4,9 +4,11 @@ class Restaurant < ActiveRecord::Base
     has_many :customers, through: :orders
 
     def menu_items
-        MenuItem.all.select do |mi|
-            mi.restaurant == self
-        end
+        MenuItem.all.select { |mi| mi.restaurant == self} 
+    end
+
+    def return_menu_string
+        self.menu_items.map{|item_obj| "#{item_obj.food_name} ---> #{item_obj.price}"}
     end
 
     
