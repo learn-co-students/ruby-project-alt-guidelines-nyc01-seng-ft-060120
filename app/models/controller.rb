@@ -183,6 +183,7 @@ class Controller
     appointment_counterpart = appointment_counterpart.class.find_by(name: hash[counterpart_class_sym]) if appointment_counterpart.class.find_by(name: hash[counterpart_class_sym])
     appointment.status = hash[:status] if hash[:status]
     appointment.note = hash[:note] if hash[:note]
+    appointment.save
 
     view_appointment
     
