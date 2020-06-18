@@ -143,7 +143,7 @@ class Controller
     until counterpart_instance
       puts "I couldn't find that #{self.class_to_string(counterpart_class)}.\n"
       counterpart_name = prompt.ask("Please enter your #{self.class_to_string(counterpart_class)}'s name")
-      countepart_instance = counterpart.find_by(name: counterpart_name)
+      countepart_instance = counterpart_class.find_by(name: counterpart_name)
     end
     prompt.ask("When would you like to schedule this appointment for?")
     self.appointment = Appointment.create(
@@ -178,12 +178,16 @@ class Controller
       key(:status).ask("Enter New Status")
       key(:note).ask("Enter a New Note")
     end
-    
-    appointment.scheduled_time = Time.now + rand(10.days) if hash[:scheduled_time]
+    scheduled_time = Time.now + rand(10.days) if hash[:scheduled_time]
     appointment_counterpart = appointment_counterpart.class.find_by(name: hash[counterpart_class_sym]) if appointment_counterpart.class.find_by(name: hash[counterpart_class_sym])
-    appointment.status = hash[:status] if hash[:status]
-    appointment.note = hash[:note] if hash[:note]
-    appointment.save
+    status = hash[:status] if hash[:status]
+    note = hash[:note] if hash[:note]
+    appointment.update(
+      scheduled_time: scheduled_time,
+      counterpart_class_sym => appointment_counterpart,
+      status: status,
+      note: note
+    )    
 
     view_appointment
     
