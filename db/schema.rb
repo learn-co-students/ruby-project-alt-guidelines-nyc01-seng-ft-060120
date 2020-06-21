@@ -15,6 +15,8 @@ ActiveRecord::Schema.define(version: 2020_06_18_185303) do
   create_table "individuals", force: :cascade do |t|
     t.string "name"
     t.boolean "status"
+    t.string "username"
+    t.string "password"
   end
 
   create_table "locations", force: :cascade do |t|

@@ -1,39 +1,14 @@
 require_relative '../config/environment'
 
-puts "Welcome to the Corona Tracking Application 🦠"
-puts "What is your name?"
-name_individual = gets.chomp
+controller_instance = Controller.new()
+logged_in_user = controller_instance.greetings()
 
-puts "
-#{name_individual}, do you have any of the following symptoms(True or False)
--Fever or chills
--Cough
--Shortness of breath or difficulty breathing
--Fatigue
--Muscle or body aches
--Headache
--New loss of taste or smell
--Sore throat
--Congestion or runny nose
--Nausea or vomiting
--Diarrhea
-"
-individual_status = gets.chomp
+until !logged_in_user.nil?
+  sleep 2
+  system "clear"
+  theUserChoice = controller_instance.greetings()
+end
 
+controller_instance.individual = logged_in_user
 
-
-Individual.create(
-    name: name_individual,
-    status: individual_status
-    
-)
-
-puts "Hi,#{name_individual} What is your location?"
-name_place = gets.chomp
-
-
-
-
-
-
-puts "Your information has been saved!"
+controller_instance.main_menu
